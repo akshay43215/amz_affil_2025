@@ -23,7 +23,6 @@ build/
 out-tsc/
 out/
 lib/
-public/
 
 # Coverage directory (for test coverage)
 coverage/

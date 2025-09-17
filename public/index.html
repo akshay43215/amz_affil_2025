@@ -1,0 +1,446 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Responsive Product Cards with Theme Toggle</title>
+<style>
+  :root{
+    --radius: 14px;
+    --gap: 20px;
+    --card-padding: 18px;
+    font-family: Inter, ui-sans-serif, system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  }
+
+  /* Light theme vars */
+  body.light{
+    --bg: #f9fafb;
+    --card-bg: white;
+    --accent: linear-gradient(90deg,#7c3aed,#06b6d4);
+    --muted: #6b7280;
+    --text: #111827;
+    --card-border: #e5e7eb;
+  }
+
+  /* Dark theme vars */
+  body.dark{
+    --bg: #0f1724;
+    --card-bg: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+    --accent: linear-gradient(90deg,#7c3aed,#06b6d4);
+    --muted: #9aa4b2;
+    --text: #e6eef6;
+    --card-border: rgba(255,255,255,0.05);
+  }
+
+  html,body{height:100%}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    padding:40px;
+    box-sizing:border-box;
+    line-height:1.38;
+    transition: background .3s ease, color .3s ease;
+  }
+
+  h1{font-weight:700;margin:0 0 18px 0;font-size:20px;color:var(--text)}
+  .wrap{max-width:1200px;margin:0 auto}
+
+  /* Theme toggle button */
+  .theme-toggle{
+    position:fixed;
+    top:20px;
+    right:20px;
+    border:none;
+    padding:10px 14px;
+    border-radius:12px;
+    cursor:pointer;
+    background: var(--accent);
+    color:white;
+    font-weight:700;
+    box-shadow:0 4px 10px rgba(0,0,0,0.3);
+    transition: transform .2s;
+    z-index:100;
+  }
+  .theme-toggle:hover{transform:translateY(-2px)}
+
+  /* Grid */
+  .grid{
+    display:grid;
+    gap:var(--gap);
+    /* grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); */
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    /* grid-template-columns: repeat(3, 1fr); */
+  }
+
+  /* Card */
+  .card{
+    background:var(--card-bg);
+    border-radius:var(--radius);
+    padding:var(--card-padding);
+    box-shadow: 0 6px 18px rgba(2,6,23,0.55);
+    transition:transform .28s, box-shadow .28s, background .3s, color .3s;
+    display:flex;
+    flex-direction:column;
+    min-height: 320px;
+    position:relative;
+    overflow:hidden;
+    border: 1px solid var(--card-border);
+  }
+  .card:hover{
+    transform: translateY(-6px);
+    box-shadow: 0 14px 38px rgba(2,6,23,0.7);
+  }
+
+  .card-media{
+    border-radius:12px;
+    overflow:hidden;
+    aspect-ratio: 16/10;
+    margin-bottom:12px;
+  }
+  .card-media img{width:100%;height:100%;object-fit:cover}
+
+  .card-top{
+    display:flex;
+    gap:12px;
+    align-items:center;
+    margin-bottom:8px;
+  }
+  .badge{
+    padding:6px 10px;
+    border-radius:999px;
+    font-weight:700;
+    font-size:12px;
+    background: rgba(0,0,0,0.05);
+    color:var(--muted);
+  }
+  .title{
+    font-size:16px;
+    font-weight:700;
+    margin:0;
+    flex:1;
+  }
+  .subtitle{
+    font-size:13px;
+    color:var(--muted);
+    margin-top:4px;
+  }
+
+  .desc{
+    margin-top:10px;
+    font-size:14px;
+    line-height:1.45;
+    display:-webkit-box;
+    -webkit-line-clamp:3;
+    -webkit-box-orient:vertical;
+    overflow:hidden;
+    transition: all .25s ease;
+  }
+  .desc.expanded{-webkit-line-clamp:unset;display:block;max-height:1000px}
+
+  .meta{
+    margin-top:12px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+  }
+  .price{
+    font-size:18px;
+    font-weight:800;
+    background:var(--accent);
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+  }
+  .rating{font-size:13px;color:var(--muted)}
+
+  .card-footer{
+    margin-top:auto;
+    display:flex;
+    gap:12px;
+    margin-top:16px;
+  }
+
+  .btn{
+    border:0;
+    cursor:pointer;
+    font-weight:700;
+    padding:10px 14px;
+    border-radius:12px;
+    background:rgba(0,0,0,0.05);
+    color:var(--text);
+    display:inline-flex;
+    gap:8px;
+    align-items:center;
+    transition: transform .18s;
+  }
+  .btn:hover{transform:translateY(-2px)}
+  .btn.primary{
+    background: var(--accent);
+    color:white;
+  }
+  .chev{transition: transform .18s}
+  .btn[aria-expanded="true"] .chev{transform:rotate(180deg)}
+
+  /* Loader Styles */
+    .loader {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 200px;
+    }
+
+    .spinner {
+      border: 6px solid #f3f3f3;
+      border-top: 6px solid #3498db;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+</style>
+</head>
+<body class="dark">
+  <button class="theme-toggle" id="themeToggle">🌙 Dark</button>
+
+ <div class="wrap">
+
+  <!-- Loader -->
+  <div id="loader" class="loader">
+    <div class="spinner"></div>
+  </div>
+
+    <h1>Featured items</h1>
+
+    <div class="grid" id="cardGrid">
+      <!-- Card 1 -->
+      <article class="card" data-id="2">
+        <div class="card-media">
+          <img src="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?q=80&w=1200&auto=format&fit=crop&crop=entropy" alt="Product image: Coffee maker">
+        </div>
+
+        <div class="card-top">
+          <span class="badge">Kitchen</span>
+          <h2 class="title">Barista Mini Coffee Maker</h2>
+        </div>
+
+        <p class="subtitle">Compact | 15 bar pressure | Quick brew</p>
+
+        <p class="desc" id="desc-2">
+          Make café-style espresso at home with this compact machine. It includes a professional steam wand for milk frothing, a removable water tank for easy refills, and a fast heating system. Ideal for small kitchens and beginner baristas who want robust flavor without the bulk.
+        </p>
+
+        <div class="meta">
+          <div class="price">₹7,299</div>
+          <div class="rating">⭐ 4.4 • 860 reviews</div>
+        </div>
+
+        <div class="card-footer">
+          <button class="btn" aria-controls="desc-2" aria-expanded="false">View more <span class="chev">▾</span></button>
+          <a class="btn primary" href="#" rel="noopener noreferrer">Buy on Amazon</a>
+        </div>
+      </article>
+    </div>
+  </div>
+
+<script>
+  // Theme toggle
+  const body = document.body;
+  const toggleBtn = document.getElementById('themeToggle');
+  const savedTheme = localStorage.getItem('theme');
+  if(savedTheme){ body.className = savedTheme; updateLabel(); }
+
+  toggleBtn.addEventListener('click', ()=>{
+    body.classList.toggle('light');
+    body.classList.toggle('dark');
+    localStorage.setItem('theme', body.classList.contains('light') ? 'light' : 'dark');
+    updateLabel();
+  });
+
+  function updateLabel(){
+    if(body.classList.contains('light')){
+      toggleBtn.textContent = '☀️ Light';
+    } else {
+      toggleBtn.textContent = '🌙 Dark';
+    }
+  }
+
+  // View more toggle
+  document.addEventListener('click', e=>{
+    const btn = e.target.closest('.btn:not(.primary)');
+    if(!btn) return;
+    const id = btn.getAttribute('aria-controls');
+    const desc = document.getElementById(id);
+    const expanded = btn.getAttribute('aria-expanded') === 'true';
+    if(expanded){
+      desc.classList.remove('expanded');
+      btn.setAttribute('aria-expanded','false');
+      btn.innerHTML = 'View more <span class="chev">▾</span>';
+    } else {
+      desc.classList.add('expanded');
+      btn.setAttribute('aria-expanded','true');
+      btn.innerHTML = 'View less <span class="chev">▾</span>';
+    }
+  });
+
+  // const apiUrl = "https://fakestoreapi.com/products";
+  const apiUrl = "api/products";
+
+    async function loadItems() {
+      const loader = document.getElementById("loader");
+      const container = document.getElementById("cardGrid");
+
+      try {
+        // Show loader
+        loader.style.display = "flex";
+        // container.style.display = "none";
+
+        const response = await fetch(apiUrl);
+        const data = await response.json();
+
+        // container.innerHTML = ""; // Clear existing
+
+        data.forEach(item => {
+          
+          const card = document.createElement("article");
+          card.className = "card";
+
+          card.setAttribute("data-id", item?.id);
+          card.innerHTML = 
+      //     `<article class="card" data-id="2">
+      //   <div class="card-media">
+      //     <img src="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?q=80&w=1200&auto=format&fit=crop&crop=entropy" alt="Product image: Coffee maker">
+      //   </div>
+
+      //   <div class="card-top">
+      //     <span class="badge">Kitchen</span>
+      //     <h2 class="title">Barista Mini Coffee Maker</h2>
+      //   </div>
+
+      //   <p class="subtitle">Compact | 15 bar pressure | Quick brew</p>
+
+      //   <p class="desc" id="desc-2">
+      //     Make café-style espresso at home with this compact machine. It includes a professional steam wand for milk frothing, a removable water tank for easy refills, and a fast heating system. Ideal for small kitchens and beginner baristas who want robust flavor without the bulk.
+      //   </p>
+
+      //   <div class="meta">
+      //     <div class="price">₹7,299</div>
+      //     <div class="rating">⭐ 4.4 • 860 reviews</div>
+      //   </div>
+
+      //   <div class="card-footer">
+      //     <button class="btn" aria-controls="desc-2" aria-expanded="false">View more <span class="chev">▾</span></button>
+      //     <a class="btn primary" href="#" rel="noopener noreferrer">Buy on Amazon</a>
+      //   </div>
+      // </article>`
+          `
+            <div class="card-media">
+              <img src="${item.image}" alt="Product image: ${item.title}">
+            </div>
+
+            <div class="card-top">
+              <span class="badge">${item.category}</span>
+              <h2 class="title">${item.title}</h2>
+            </div>
+
+            <p class="subtitle">${item.subtitle && item.subtitle}</p>
+
+            <p class="desc" id="desc-${item?.id}">
+              ${item.description}
+            </p>
+
+            <div class="meta">
+              <div class="price">${item.price}</div>
+              <div class="rating">⭐${item.rating && JSON.stringify(item.rating)}</div>
+            </div>
+
+            <div class="card-footer">
+              <button class="btn" aria-controls="desc-${item.id}" aria-expanded="false">
+                View more <span class="chev">▾</span>
+                </button>
+                <a target='_blank'  class="btn primary" href="${item.link &&  item.link}" rel="noopener noreferrer">Buy on Amazon</a>
+
+              </div>
+              `;
+              // <div class="card-footer">
+              //   <button class="btn" aria-controls="desc-${item.id}" aria-expanded="false">View more <span class="chev">▾</span></button>
+              //   <a class="btn primary" href="${item.link &&  item.link}" rel="noopener noreferrer">Buy on Amazon</a>
+              // </div> 
+
+          // If there's an image key, handle separately
+          // let imgTag = "";
+          // if (item.image) {
+          //   imgTag = `<img src="${item.image}" alt="${item.title || "item"}">`;
+          // }
+
+          // Build content from all keys dynamically
+          // let contentHtml = "<div class='card-content'>";
+          // for (const [key, value] of Object.entries(item)) {
+          //   if (key === "image") continue;
+
+          //   let displayValue = String(value);
+
+          //   // Handle long text values (like description)
+          //   if (displayValue.length > 100) {
+          //     const shortText = displayValue.substring(0, 100) + "...";
+          //     const fullText = displayValue;
+
+          //     contentHtml += `
+          //       <p>
+          //       <strong>${key}:</strong> 
+          //       <span class="short-text">${shortText}</span>
+          //       <span class="full-text" style="display:none;">${fullText}</span>
+          //       <button class="toggle-btn">More</button>
+          //       </p>
+          //   `;
+          //   } else {
+          //     contentHtml += `<p><strong>${key}:</strong> ${displayValue}</p>`;
+          //   }
+          // }
+          //contentHtml += "</div>";
+
+          //card.innerHTML = imgTag + contentHtml;
+          container.appendChild(card);
+        });
+
+        // Add toggle functionality
+        container.addEventListener("click", function (e) {
+          if (e.target.classList.contains("toggle-btn")) {
+            const btn = e.target;
+            const shortText = btn.parentElement.querySelector(".short-text");
+            const fullText = btn.parentElement.querySelector(".full-text");
+
+            if (fullText.style.display === "none") {
+              shortText.style.display = "none";
+              fullText.style.display = "inline";
+              btn.textContent = "Less";
+            } else {
+              shortText.style.display = "inline";
+              fullText.style.display = "none";
+              btn.textContent = "More";
+            }
+          }
+        });
+        
+
+
+        // Hide loader and show cards
+        loader.style.display = "none";
+        // container.style.display = "grid";
+
+      } catch (error) {
+        console.error("Error loading items:", error);
+        loader.innerHTML = "<p>Failed to load data.</p>";
+      }
+    }
+
+    // Ensure it runs after DOM is ready
+    document.addEventListener("DOMContentLoaded", loadItems);
+</script>
+</body>
+</html>

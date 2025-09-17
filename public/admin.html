@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Amazon Affiliate Product Manager</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f9;
+      margin: 0;
+      padding: 20px;
+      color: #333;
+    }
+
+    h2 {
+      color: #222;
+      text-align: center; 
+      font-weight: 900;
+    }
+
+    form {
+      background: #fff;
+      padding: 20px;
+      margin: auto;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      max-width: 400px;
+    }
+
+    input, textarea, button {
+      width: 100%;
+      padding: 10px 3px;
+      margin: 8px 0;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+
+    input:focus, textarea:focus {
+      border-color: #0077ff;
+      outline: none;
+      box-shadow: 0 0 4px rgba(0, 119, 255, 0.3);
+    }
+
+    button {
+      background: #0077ff;
+      color: #fff;
+      font-size: 15px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background: #005fcc;
+    }
+
+    .error {
+      color: red;
+      font-size: 0.9em;
+      margin-top: 5px;
+    }
+
+    #productList {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+      padding: 0;
+      list-style: none;
+    }
+
+    #productList li {
+      background: #fff;
+      border-radius: 10px;
+      padding: 15px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    }
+
+    #productList li img {
+      width: 100%;
+      max-height: 150px;
+      object-fit: contain;
+      margin-bottom: 10px;
+    }
+
+    #productList li b {
+      display: block;
+      font-size: 16px;
+      margin-bottom: 5px;
+    }
+
+    #productList a {
+      display: inline-block;
+      margin-top: 8px;
+      color: #0077ff;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    #productList a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <form id="productForm">
+    <h2>Add Amazon Product</h2>
+    <input type="text" id="id" placeholder="ASIN (e.g. B08N5WRWNW)" required>
+    <input type="text" id="title" placeholder="Product Title" required>
+    <input type="number" id="price" placeholder="Price in ₹" required>
+    <input type="url" id="image" placeholder="Image URL" required>
+    <input type="text" id="tag" placeholder="Affiliate Tag (e.g. yourtag-21)" value=" akshay43215-21" required>
+    <input type="text" id="category" placeholder="Category" required>
+    <textarea id="description" placeholder="Description (min 10 chars)"></textarea>
+    <button type="submit">Save</button>
+    <div id="errorBox" class="error"></div>
+  </form>
+
+  <h2>Product List</h2>
+  <ul id="productList"></ul>
+
+  <script>
+    async function loadProducts() {
+      const res = await fetch("/api/products");
+      const data = await res.json();
+      renderProducts(data);
+    }
+
+    function renderProducts(products) {
+      const list = document.getElementById("productList");
+      list.innerHTML = "";
+      products.forEach(itm => {
+        const li = document.createElement("li");
+        console.log(Object.keys(itm));
+        console.log(itm['link']);
+        
+          
+        li.innerHTML = `
+          <img src="${itm.image}" alt="${itm.title}">
+          <b>${itm.title}</b>
+          <span>₹${itm.price}</span><br>
+          <small>${itm.category}</small><br>
+          <a href="${itm.link}" target="_blank">View on Amazon</a>
+        `;
+        list.appendChild(li);
+      });
+    }
+
+    document.getElementById("productForm").addEventListener("submit", async e => {
+      e.preventDefault();
+      const errorBox = document.getElementById("errorBox");
+      errorBox.textContent = "";
+
+      const id = document.getElementById("id").value.trim();
+      const title = document.getElementById("title").value.trim();
+      const price = parseFloat(document.getElementById("price").value);
+      const image = document.getElementById("image").value.trim();
+      const tag = document.getElementById("tag").value.trim();
+      const category = document.getElementById("category").value.trim();
+      const description = document.getElementById("description").value.trim();
+
+      // 🔎 Validations
+      if (!/^[A-Z0-9]{8,12}$/.test(id)) {
+        errorBox.textContent = "ASIN must be 8-12 uppercase letters/numbers.";
+        return;
+      }
+      if (title.length < 3) {
+        errorBox.textContent = "Title must be at least 3 characters.";
+        return;
+      }
+      if (isNaN(price) || price <= 0) {
+        errorBox.textContent = "Price must be positive.";
+        return;
+      }
+      if (!/^https?:\/\/.+\.(jpg|jpeg|png|webp)$/i.test(image)) {
+        errorBox.textContent = "Image must be a valid image URL.";
+        return;
+      }
+      if (!/^[a-z0-9-]{3,20}$/i.test(tag)) {
+        errorBox.textContent = "Affiliate tag must be alphanumeric (e.g. yourtag-21).";
+        return;
+      }
+      if (category.length < 2) {
+        errorBox.textContent = "Category is required.";
+        return;
+      }
+      if (description && description.length < 10) {
+        errorBox.textContent = "Description must be at least 10 characters.";
+        return;
+      }
+
+      // ✅ Auto-generate Amazon Affiliate Link
+      const url = `https://www.amazon.in/dp/${id}?tag=${tag}`;
+
+      const product = { id, title, price, image, url, category, description };
+
+      const res = await fetch("/api/products", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(product)
+      });
+
+      const data = await res.json();
+      if (data.success) {
+        renderProducts(data.products);
+        document.getElementById("productForm").reset();
+      } else {
+        errorBox.textContent = data.message || "Failed to save product.";
+      }
+    });
+
+    loadProducts();
+  </script>
+</body>
+</html>
