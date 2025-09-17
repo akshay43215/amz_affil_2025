@@ -2,6 +2,7 @@
 const express = require('express');
 const cors = require('cors');
 const fs = require('fs');
+const path = require('path');
 
 const app = express();
 
@@ -20,17 +21,18 @@ const corsOptions = {
 
 //get all-pruducts
 app.get('/api/products', (req, res) => {
-  console.log('Received request for /api/products');
-  
-  const data = JSON.parse(fs.readFileSync('products.json', 'utf-8'));
+  const jsonPath = path.join(process.cwd(), 'public', 'products.json');
+  console.log('Received request for '+jsonPath);
+
+  const data = JSON.parse(fs.readFileSync(jsonPath, 'utf-8'));
   res.json(data);
 });
 
 //add or edit product
 app.post('/api/products', (req, res) => {
   console.log('Received POST request for /api/products with body:', req.body);
-  
-  const data = JSON.parse(fs.readFileSync('products.json', 'utf-8'));
+  const jsonPath = path.join(process.cwd(), 'public', 'products.json');
+  const data = JSON.parse(fs.readFileSync(jsonPath, 'utf-8'));
   const newProduct = req.body;
 
   const index = data.findIndex(p => p.id === newProduct.id);
