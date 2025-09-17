@@ -1,0 +1,20 @@
+{
+  "name": "affiliate_dynamic_list",
+  "version": "1.0.0",
+  "type": "commonjs",
+  "description": "listing and managing custom amazon affiliate-products",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon index.js"
+  },
+  "author": "akshay43215",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^5.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  }
+}
