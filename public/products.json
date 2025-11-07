@@ -7,6 +7,7 @@
     "link": "https://amzn.to/46GZ24g",
     "description": "JBL Endurance Run 2, Sports in Ear Wired Earphones with Mic, Pure Bass, Sweatproof, Flexsoft eartips, Magnetic Earbuds, Fliphook & TwistLock Technology with Voice Assistant Support for Mobiles (Black)",
     "image": "https://m.media-amazon.com/images/I/4127CnooHBL._SX522_.jpg",
+    "subtitle": "In Ear | 16 Ohm ",
     "rating": {
       "rate": 4.2,
       "count": 0
@@ -20,6 +21,7 @@
     "price": 429,
     "description": "Motul 3100 4T Gold 20W50 API SM Technosynthese High Performance Semi Synthetic Engine Oil for Bikes (1 L)",
     "image": "https://m.media-amazon.com/images/I/71p-XSjhQ4L._SY879_.jpg",
+    "subtitle": "20W 50 | 1000 ml",
     "rating": {
       "rate": 4.1,
       "count": 0
@@ -30,6 +32,7 @@
     "title": "Iron Tawa",
     "price": 12345,
     "image": "https://m.media-amazon.com/images/I/51SJGtBZCxL._SX679_.jpg",
+    "subtitle": "Iron | 1.12 Kilograms",
     "link": "https://www.amazon.in/dp/B08LQ51YNF?tag=akshay43215-21",
     "category": "kitchen",
     "description": "Roti, Chapati, Paratha, Thepla & All Indian Flatbreads"
@@ -39,8 +42,9 @@
     "title": "GM 3257-WHITE",
     "price": 338,
     "image": "https://m.media-amazon.com/images/I/61DntFcBNjL._SL1500_.jpg",
+    "subtitle": "Heavy Duty | 2 cm ",
     "link": "https://amzn.to/3IsBdnp",
-    "category": "",
+    "category": "Power Strip",
     "description": "GM 10 Amp Extension Board with 2 Metre Heavy Duty Copper Extension Cord – 4 International Sockets, Master Switch, LED Indicator with Safety Shutter | GM 3257"
   },
   {
@@ -48,15 +52,17 @@
     "title": "Motul 10W 30",
     "price": 310,
     "image": "https://m.media-amazon.com/images/I/71BP0GTRXgL._SL1500_.jpg",
+    "subtitle": "1 Litres | 10W30 ",
     "link": "https://amzn.to/4gCPXwE",
     "category": "Engine Oil",
     "description": "Motul 3000 4T Plus 10W30 Engine Oil for Bikes (1 L)"
   },
   {
     "id": "B0DKTNTFSD",
-    "title": "Goelite Silver Acrylic for Painting & Art and Craft Purpose",
+    "title": "Goelite Silver Acrylic for Painting & Art and Craft",
     "price": 369,
     "image": "https://m.media-amazon.com/images/I/71QufB2+FEL._SL1500_.jpg",
+    "subtitle": "6 x 6 inch | 15L x 15W cm",
     "link": "https://amzn.to/42JPaUT",
     "category": "Mirror For Painting",
     "description": "Goelite Silver Acrylic for Painting & Art and Craft Purpose | This is NOT A Real Mirror | 6 Inch X 6 Inch Pack of 4 | Round Circle Mirror for Lippan Art, and Many More"

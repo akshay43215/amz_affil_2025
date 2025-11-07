@@ -203,10 +203,45 @@
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
     }
+    /* footer and disclosure styles*/
+    .disclosure {
+      margin-bottom: 30px;
+      padding: 12px 16px;
+      background: rgba(0,0,0,0.05);
+      border-left: 4px solid #06b6d4;
+      border-radius: 8px;
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+    .site-footer {
+      margin-top: 60px;
+      padding: 24px;
+      text-align: center;
+      font-size: 14px;
+      color: var(--muted);
+      background: var(--card-bg);
+      border-top: 1px solid var(--card-border);
+      border-radius: 12px 12px 0 0;
+      box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+      line-height: 1.6;
+    }
+    .site-footer a {
+      color: #06b6d4;
+      text-decoration: none;
+    }
+    .site-footer a:hover {
+      text-decoration: underline;
+    }
+    .small-text {
+      font-size: 13px;
+      color: var(--muted);
+    }
 </style>
 </head>
 <body class="dark">
   <button class="theme-toggle" id="themeToggle">🌙 Dark</button>
+  <h1>Featured Products</h1>
 
  <div class="wrap">
 
@@ -215,36 +250,101 @@
     <div class="spinner"></div>
   </div>
 
-    <h1>Featured items</h1>
+  <p class="disclosure">
+    <strong>Affiliate Disclosure:</strong> As an Amazon Associate, I earn from qualifying purchases. 
+    This means that if you click on an Amazon link and make a purchase, I may receive a small commission at no additional cost to you.
+  </p>
 
     <div class="grid" id="cardGrid">
       <!-- Card 1 -->
-      <article class="card" data-id="2">
+      <article class="card" data-id="1">
         <div class="card-media">
-          <img src="https://m.media-amazon.com/images/I/51v3TtTu0wL._SY300_SX300_QL70_FMwebp_.jpg" alt="Product image: Coffee maker">
+          <!-- <img src="https://m.media-amazon.com/images/I/51v3TtTu0wL._SY300_SX300_QL70_FMwebp_.jpg" alt="Product image: Salmon fish oil supplement"> -->
         </div>
 
         <div class="card-top">
           <span class="badge">Supplements</span>
-          <h2 class="title">Barista Mini Coffee Maker</h2>
+          <h2 class="title"> Tata 1mg Salmon Omega 3 Fish Oil Supplements </h2>
         </div>
 
-        <p class="subtitle">Compact | 15 bar pressure | Quick brew</p>
+        <p class="subtitle">1000 mg | EPA- 180 mg | DHA-120 mg </p>
 
         <p class="desc" id="desc-2">
-          Make café-style espresso at home with this compact machine. It includes a professional steam wand for milk frothing, a removable water tank for easy refills, and a fast heating system. Ideal for small kitchens and beginner baristas who want robust flavor without the bulk.
+          <!-- Tata 1mg Salmon Omega 3 Fish Oil Supplements 1000mg - 90 Capsules |Tryglycride form | 180mg EPA & 120mg DHA | High Absorption for Heart,Brain & Joints | Helps Manage Cholesterol -->
         </p>
 
-        <div class="meta">
-          <div class="price">₹699</div>
-          <div class="rating">⭐ 4.4 • 860 reviews</div>
-        </div>
+        <!-- <div class="meta">
+          <div class="price">₹529</div>
+          <div class="rating">⭐ 4.3 • reviews</div>
+        </div> -->
 
         <div class="card-footer">
-          <button class="btn" aria-controls="desc-2" aria-expanded="false">View more <span class="chev">▾</span></button>
-          <a class="btn primary" href="https://amzn.to/4hM0ZQW" rel="noopener noreferrer">Buy on Amazon</a>
+          <!-- <button class="btn" aria-controls="desc-2" aria-expanded="false">View more <span class="chev">▾</span></button> -->
+          <a class="btn primary" target='_blank' href="https://amzn.to/4hM0ZQW" rel="noopener noreferrer">Buy on Amazon</a>
         </div>
       </article>
+      
+      <!-- crad-2 -->
+      <article class="card" data-id="2">
+        <div class="card-media">
+          <!-- <img src="https://m.media-amazon.com/images/I/41hxrmLzBTL._SY300_SX300_QL70_FMwebp_.jpg" alt="Product image: CMF Phone 2 Pro 5G"> -->
+        </div>
+
+        <div class="card-top">
+          <span class="badge">Smartphones</span>
+          <h2 class="title">CMF BY NOTHING</h2>
+        </div>
+
+        <p class="subtitle">8 GB RAM | 256 GB ROM | Expandable Upto 2 TB</p>
+
+        <p class="desc" id="desc-2">
+          <!-- CMF Phone 2 Pro 5G (Light Green, 8GB RAM, 256GB Storage) | Dimensity 7300 Pro Processor | 5000mAh Battery 33W Fast Charging | 2TB Expandable | 50MP+50MP+8MP Camera | -->
+        </p>
+
+        <!-- <div class="meta">
+          <div class="price">₹7,299</div>
+          <div class="rating">⭐ 4.2 • reviews</div>
+        </div> -->
+
+        <div class="card-footer">
+          <!-- <button class="btn" aria-controls="desc-2" aria-expanded="false">View more <span class="chev">▾</span></button> -->
+          <a class="btn primary" target='_blank' href="https://amzn.to/43jTzyj" rel="noopener noreferrer">Buy on Amazon</a>
+        </div>
+      </article> 
+
+      <!-- crad-3 -->
+      <article class="card" data-id="3">
+        <div class="card-media">
+          <!-- <img src="https://m.media-amazon.com/images/I/41hxrmLzBTL._SY300_SX300_QL70_FMwebp_.jpg" alt="Product image: CMF Phone 2 Pro 5G"> -->
+        </div>
+        <div class="card-top">
+          <span class="badge">Mobiles & Accessories</span>
+          <h2 class="title">TheGiftKart Hybrid Phone Cover Case for CMF 2 Pro</h2>
+        </div>
+        <p class="subtitle">Polycarbonate | Thermoplastic Polyurethane</p>
+        <p class="desc" id="desc-2">
+          <!-- CMF Phone 2 Pro 5G (Light Green, 8GB RAM, 256GB Storage) | Dimensity 7300 Pro Processor | 5000mAh Battery 33W Fast Charging | 2TB Expandable | 50MP+50MP+8MP Camera | -->
+        </p>
+        <div class="card-footer">
+          <a class="btn primary" target='_blank' href="https://amzn.to/3WJBwxS" rel="noopener noreferrer">Buy on Amazon</a>
+        </div>
+      </article> 
+
+      <!-- crad-4 -->
+      <article class="card" data-id="4">
+        <div class="card-media">
+        </div>
+        <div class="card-top">
+          <span class="badge">Mobiles & Accessories</span>
+          <h2 class="title">DJI Osmo Mobile 7 Gimbal Stabilizer</h2>
+        </div>
+        <p class="subtitle">180D x 40W x 80H mm | 300 g | </p>
+        <p class="desc" id="desc-2">
+        </p>
+        <div class="card-footer">
+          <a class="btn primary" target='_blank' href="https://amzn.to/47MB2My" rel="noopener noreferrer">Buy on Amazon</a>
+        </div>
+      </article> 
     </div>
   </div>
 
@@ -312,99 +412,45 @@
 
           card.setAttribute("data-id", item?.id);
           card.innerHTML = 
-      //     `<article class="card" data-id="2">
-      //   <div class="card-media">
-      //     <img src="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?q=80&w=1200&auto=format&fit=crop&crop=entropy" alt="Product image: Coffee maker">
-      //   </div>
+          // ` <div class="card-media">
+          //     <img src="${item.image}" alt="Product image: ${item.title}">
+          //   </div>
 
-      //   <div class="card-top">
-      //     <span class="badge">Kitchen</span>
-      //     <h2 class="title">Barista Mini Coffee Maker</h2>
-      //   </div>
+          //   <div class="card-top">
+          //     <span class="badge">${item.category}</span>
+          //     <h2 class="title">${item.title}</h2>
+          //   </div>
 
-      //   <p class="subtitle">Compact | 15 bar pressure | Quick brew</p>
+          //   <p class="subtitle">${item.subtitle && item.subtitle}</p>
 
-      //   <p class="desc" id="desc-2">
-      //     Make café-style espresso at home with this compact machine. It includes a professional steam wand for milk frothing, a removable water tank for easy refills, and a fast heating system. Ideal for small kitchens and beginner baristas who want robust flavor without the bulk.
-      //   </p>
+          //   <p class="desc" id="desc-${item?.id}">
+          //     ${item.description}
+          //   </p>
 
-      //   <div class="meta">
-      //     <div class="price">₹7,299</div>
-      //     <div class="rating">⭐ 4.4 • 860 reviews</div>
-      //   </div>
+          //   <div class="meta">
+          //     <div class="price">${item.price}</div>
+          //     <div class="rating">⭐${item.rating && JSON.stringify(item.rating)}</div>
+          //   </div>
 
-      //   <div class="card-footer">
-      //     <button class="btn" aria-controls="desc-2" aria-expanded="false">View more <span class="chev">▾</span></button>
-      //     <a class="btn primary" href="#" rel="noopener noreferrer">Buy on Amazon</a>
-      //   </div>
-      // </article>`
-          `
-            <div class="card-media">
-              <img src="${item.image}" alt="Product image: ${item.title}">
-            </div>
+          //   <div class="card-footer">
+          //     <button class="btn" aria-controls="desc-${item.id}" aria-expanded="false">
+          //       View more <span class="chev">▾</span>
+          //       </button>
+          //       <a target='_blank'  class="btn primary" href="${item.link &&  item.link}" rel="noopener noreferrer">Buy on Amazon</a>
 
+          //     </div> `;
+
+           ` <div class="card-media">
+             </div>
             <div class="card-top">
               <span class="badge">${item.category}</span>
               <h2 class="title">${item.title}</h2>
             </div>
 
             <p class="subtitle">${item.subtitle && item.subtitle}</p>
-
-            <p class="desc" id="desc-${item?.id}">
-              ${item.description}
-            </p>
-
-            <div class="meta">
-              <div class="price">${item.price}</div>
-              <div class="rating">⭐${item.rating && JSON.stringify(item.rating)}</div>
-            </div>
-
             <div class="card-footer">
-              <button class="btn" aria-controls="desc-${item.id}" aria-expanded="false">
-                View more <span class="chev">▾</span>
-                </button>
                 <a target='_blank'  class="btn primary" href="${item.link &&  item.link}" rel="noopener noreferrer">Buy on Amazon</a>
-
-              </div>
-              `;
-              // <div class="card-footer">
-              //   <button class="btn" aria-controls="desc-${item.id}" aria-expanded="false">View more <span class="chev">▾</span></button>
-              //   <a class="btn primary" href="${item.link &&  item.link}" rel="noopener noreferrer">Buy on Amazon</a>
-              // </div> 
-
-          // If there's an image key, handle separately
-          // let imgTag = "";
-          // if (item.image) {
-          //   imgTag = `<img src="${item.image}" alt="${item.title || "item"}">`;
-          // }
-
-          // Build content from all keys dynamically
-          // let contentHtml = "<div class='card-content'>";
-          // for (const [key, value] of Object.entries(item)) {
-          //   if (key === "image") continue;
-
-          //   let displayValue = String(value);
-
-          //   // Handle long text values (like description)
-          //   if (displayValue.length > 100) {
-          //     const shortText = displayValue.substring(0, 100) + "...";
-          //     const fullText = displayValue;
-
-          //     contentHtml += `
-          //       <p>
-          //       <strong>${key}:</strong> 
-          //       <span class="short-text">${shortText}</span>
-          //       <span class="full-text" style="display:none;">${fullText}</span>
-          //       <button class="toggle-btn">More</button>
-          //       </p>
-          //   `;
-          //   } else {
-          //     contentHtml += `<p><strong>${key}:</strong> ${displayValue}</p>`;
-          //   }
-          // }
-          //contentHtml += "</div>";
-
-          //card.innerHTML = imgTag + contentHtml;
+              </div> `;    
           container.appendChild(card);
         });
 
@@ -443,4 +489,17 @@
     document.addEventListener("DOMContentLoaded", loadItems);
 </script>
 </body>
+<footer class="site-footer">
+  <p>© 2025 YourSiteName. All rights reserved.</p>
+  <p>
+    This website participates in the Amazon Services LLC Associates Program, 
+    an affiliate advertising program designed to provide a means for sites 
+    to earn advertising fees by advertising and linking to 
+    <a href="https://www.amazon.in" target="_blank" rel="noopener noreferrer">Amazon.in</a>.
+  </p>
+  <p class="small-text">
+    Product prices and availability are accurate as of the date/time indicated and are subject to change. 
+    Any price and availability information displayed on Amazon.in at the time of purchase will apply to the purchase of this product.
+  </p>
+</footer>
 </html>
