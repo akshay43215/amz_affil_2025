@@ -1,0 +1,660 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Showcase</title>
+    <style>
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8f9fa;
+            --bg-card: #ffffff;
+            --text-primary: #1a1a1a;
+            --text-secondary: #666666;
+            --border-color: #e0e0e0;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --shadow-hover: 0 8px 16px rgba(0, 0, 0, 0.15);
+            --accent: #3b82f6;
+            --accent-hover: #2563eb;
+            --radius: 12px;
+            --spacing-sm: 0.5rem;
+            --spacing-md: 1rem;
+            --spacing-lg: 1.5rem;
+            --spacing-xl: 2rem;
+            --transition: all 0.3s ease;
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-card: #1e293b;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --border-color: #334155;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            --shadow-hover: 0 8px 16px rgba(0, 0, 0, 0.4);
+            --accent: #60a5fa;
+            --accent-hover: #3b82f6;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            transition: var(--transition);
+            line-height: 1.6;
+        }
+
+        .header {
+            background-color: var(--bg-secondary);
+            padding: var(--spacing-lg) var(--spacing-xl);
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: var(--spacing-md);
+            flex-wrap: wrap;
+        }
+
+        .controls {
+            display: flex;
+            gap: var(--spacing-md);
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .header h1 {
+            font-size: clamp(1.5rem, 4vw, 2rem);
+            font-weight: 700;
+        }
+
+        .theme-toggle {
+            background-color: var(--bg-card);
+            border: 2px solid var(--border-color);
+            border-radius: 50px;
+            padding: var(--spacing-sm) var(--spacing-md);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            transition: var(--transition);
+            font-size: 1rem;
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.05);
+            border-color: var(--accent);
+        }
+
+        .filter-select,
+        .limit-select {
+            background-color: var(--bg-card);
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: var(--spacing-sm) var(--spacing-md);
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: var(--transition);
+            min-width: 150px;
+        }
+
+        .filter-select:hover,
+        .limit-select:hover {
+            border-color: var(--accent);
+        }
+
+        .filter-select:focus,
+        .limit-select:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: var(--spacing-xl);
+        }
+
+        .filters-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-lg);
+            padding: var(--spacing-md);
+            background-color: var(--bg-secondary);
+            border-radius: var(--radius);
+            flex-wrap: wrap;
+            gap: var(--spacing-md);
+        }
+
+        .results-count {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .pagination-footer {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: var(--spacing-xl);
+            padding: var(--spacing-xl) var(--spacing-lg);
+            background-color: transparent;
+            flex-wrap: wrap;
+            gap: var(--spacing-sm);
+        }
+
+        .pagination {
+            display: flex;
+            gap: var(--spacing-sm);
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .pagination button {
+            background-color: transparent;
+            border: none;
+            border-radius: 4px;
+            padding: var(--spacing-sm) var(--spacing-md);
+            color: var(--accent);
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 500;
+            min-width: 36px;
+            height: 36px;
+            font-size: 0.95rem;
+        }
+
+        .pagination button:hover:not(:disabled):not(.active) {
+            background-color: var(--bg-secondary);
+        }
+
+        .pagination button:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            color: var(--text-secondary);
+        }
+
+        .pagination button.active {
+            background-color: var(--accent);
+            color: white;
+        }
+
+        .pagination button.nav-btn {
+            color: var(--text-primary);
+        }
+
+        .pagination button.nav-btn:hover:not(:disabled) {
+            color: var(--accent);
+        }
+
+        .page-info {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            padding: 0 var(--spacing-sm);
+        }
+
+        .loading {
+            text-align: center;
+            padding: var(--spacing-xl);
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: var(--spacing-lg);
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .product-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            overflow: hidden;
+            transition: var(--transition);
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-hover);
+            border-color: var(--accent);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            background-color: var(--bg-secondary);
+        }
+
+        .product-content {
+            padding: var(--spacing-lg);
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-sm);
+        }
+
+        .product-category {
+            color: var(--accent);
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .product-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: var(--spacing-sm) 0;
+        }
+
+        .product-description {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            flex: 1;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .product-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: var(--spacing-md);
+            padding-top: var(--spacing-md);
+            border-top: 1px solid var(--border-color);
+        }
+
+        .product-price {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .product-rating {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .star {
+            color: #fbbf24;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: var(--spacing-md);
+            }
+
+            .products-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                gap: var(--spacing-md);
+            }
+
+            .header {
+                padding: var(--spacing-md);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <h1>Product Showcase</h1>
+            <div class="controls">
+                <select class="filter-select" id="categoryFilter">
+                    <option value="all">All Categories</option>
+                </select>
+                <select class="limit-select" id="limitSelect">
+                    <option value="6">6 per page</option>
+                    <option value="10" selected>10 per page</option>
+                    <option value="20">20 per page</option>
+                    <option value="50">50 per page</option>
+                </select>
+                <button class="theme-toggle" id="themeToggle">
+                    <span id="themeIcon">🌙</span>
+                    <span id="themeText">Dark Mode</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="loading" id="loading">Loading products...</div>
+        <div class="filters-info" id="filtersInfo" style="display: none;">
+            <div class="results-count" id="resultsCount"></div>
+        </div>
+        <div class="products-grid" id="productsGrid"></div>
+        <div class="pagination-footer" id="paginationFooter" style="display: none;">
+            <div class="pagination" id="pagination"></div>
+        </div>
+    </main>
+
+    <script>
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        const themeText = document.getElementById('themeText');
+        const productsGrid = document.getElementById('productsGrid');
+        const loading = document.getElementById('loading');
+        const categoryFilter = document.getElementById('categoryFilter');
+        const limitSelect = document.getElementById('limitSelect');
+        const filtersInfo = document.getElementById('filtersInfo');
+        const resultsCount = document.getElementById('resultsCount');
+        const paginationFooter = document.getElementById('paginationFooter');
+        const paginationEl = document.getElementById('pagination');
+
+        let allProducts = [];
+        let filteredProducts = [];
+        let currentPage = 1;
+        let itemsPerPage = 10;
+
+        // Theme toggle
+        const savedTheme = 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        updateThemeButton(savedTheme);
+
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            updateThemeButton(newTheme);
+        });
+
+        function updateThemeButton(theme) {
+            if (theme === 'dark') {
+                themeIcon.textContent = '☀️';
+                themeText.textContent = 'Light Mode';
+            } else {
+                themeIcon.textContent = '🌙';
+                themeText.textContent = 'Dark Mode';
+            }
+        }
+
+        // Fetch and display products
+        async function fetchProducts() {
+            try {
+                const response = await fetch('https://openapi-wof3.onrender.com/api/v1/data');
+                const result = await response.json();
+                
+                // Handle both API formats
+                if (result.success && result.data && result.data.items) {
+                    allProducts = result.data.items;
+                } else if (Array.isArray(result)) {
+                    allProducts = result;
+                } else {
+                    throw new Error('Unexpected API response format');
+                }
+                
+                populateCategoryFilter();
+                filterProducts();
+            } catch (error) {
+                loading.textContent = 'Failed to load products. Please try again later.';
+                console.error('Error fetching products:', error);
+            }
+        }
+
+        function populateCategoryFilter() {
+            const categories = new Set();
+            
+            allProducts.forEach(product => {
+                const category = product.payload?.category || product.category;
+                if (category) categories.add(category);
+            });
+            
+            categories.forEach(category => {
+                const option = document.createElement('option');
+                option.value = category;
+                option.textContent = category;
+                categoryFilter.appendChild(option);
+            });
+        }
+
+        function filterProducts() {
+            const selectedCategory = categoryFilter.value;
+            
+            if (selectedCategory === 'all') {
+                filteredProducts = [...allProducts];
+            } else {
+                filteredProducts = allProducts.filter(product => {
+                    const category = product.payload?.category || product.category;
+                    return category === selectedCategory;
+                });
+            }
+            
+            currentPage = 1;
+            displayProducts();
+        }
+
+        function displayProducts() {
+            loading.style.display = 'none';
+            filtersInfo.style.display = 'flex';
+            paginationFooter.style.display = 'flex';
+            productsGrid.innerHTML = '';
+            
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            const productsToShow = filteredProducts.slice(startIndex, endIndex);
+            
+            productsToShow.forEach(product => {
+                const card = createProductCard(product.payload);
+                productsGrid.appendChild(card);
+            });
+            
+            updateResultsCount();
+            updatePagination();
+        }
+
+        function updateResultsCount() {
+            const startIndex = (currentPage - 1) * itemsPerPage + 1;
+            const endIndex = Math.min(currentPage * itemsPerPage, filteredProducts.length);
+            resultsCount.textContent = `Showing ${startIndex}-${endIndex} of ${filteredProducts.length} products`;
+        }
+
+        function updatePagination() {
+            const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
+            paginationEl.innerHTML = '';
+            
+            if (totalPages <= 1) {
+                paginationFooter.style.display = 'none';
+                return;
+            }
+            
+            paginationFooter.style.display = 'flex';
+            
+            // Previous button
+            const prevBtn = document.createElement('button');
+            prevBtn.className = 'nav-btn';
+            prevBtn.textContent = '← prev';
+            prevBtn.disabled = currentPage === 1;
+            prevBtn.addEventListener('click', () => {
+                if (currentPage > 1) {
+                    currentPage--;
+                    displayProducts();
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+            });
+            paginationEl.appendChild(prevBtn);
+            
+            // Page numbers
+            const maxVisiblePages = 5;
+            let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+            let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+            
+            if (endPage - startPage < maxVisiblePages - 1) {
+                startPage = Math.max(1, endPage - maxVisiblePages + 1);
+            }
+            
+            if (startPage > 1) {
+                const firstBtn = document.createElement('button');
+                firstBtn.textContent = '1';
+                firstBtn.addEventListener('click', () => {
+                    currentPage = 1;
+                    displayProducts();
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                });
+                paginationEl.appendChild(firstBtn);
+                
+                if (startPage > 2) {
+                    const dots = document.createElement('span');
+                    dots.className = 'page-info';
+                    dots.textContent = '...';
+                    paginationEl.appendChild(dots);
+                }
+            }
+            
+            for (let i = startPage; i <= endPage; i++) {
+                const pageBtn = document.createElement('button');
+                pageBtn.textContent = i;
+                if (i === currentPage) pageBtn.classList.add('active');
+                pageBtn.addEventListener('click', () => {
+                    currentPage = i;
+                    displayProducts();
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                });
+                paginationEl.appendChild(pageBtn);
+            }
+            
+            if (endPage < totalPages) {
+                if (endPage < totalPages - 1) {
+                    const dots = document.createElement('span');
+                    dots.className = 'page-info';
+                    dots.textContent = '...';
+                    paginationEl.appendChild(dots);
+                }
+                
+                const lastBtn = document.createElement('button');
+                lastBtn.textContent = totalPages;
+                lastBtn.addEventListener('click', () => {
+                    currentPage = totalPages;
+                    displayProducts();
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                });
+                paginationEl.appendChild(lastBtn);
+            }
+            
+            // Next button
+            const nextBtn = document.createElement('button');
+            nextBtn.className = 'nav-btn';
+            nextBtn.textContent = 'next →';
+            nextBtn.disabled = currentPage === totalPages;
+            nextBtn.addEventListener('click', () => {
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    displayProducts();
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+            });
+            paginationEl.appendChild(nextBtn);
+        }
+
+        // Event listeners
+        categoryFilter.addEventListener('change', filterProducts);
+        
+        limitSelect.addEventListener('change', () => {
+            itemsPerPage = parseInt(limitSelect.value);
+            currentPage = 1;
+            displayProducts();
+        });
+
+        const cardStructure = {
+            container: { tag: 'div', class: 'product-card', children: ['image', 'content'] },
+            image: { tag: 'img', class: 'product-image', dataKey: 'image', attrs: { loading: 'lazy' } },
+            content: { tag: 'div', class: 'product-content', children: ['category', 'title', 'description', 'footer'] },
+            category: { tag: 'div', class: 'product-category', dataKey: 'category' },
+            title: { tag: 'h2', class: 'product-title', dataKey: 'title' },
+            description: { tag: 'p', class: 'product-description', dataKey: 'description' },
+            footer: { tag: 'div', class: 'product-footer', children: ['price', 'rating'] },
+            price: { tag: 'div', class: 'product-price', dataKey: 'price', format: (val) => `${val.toFixed(2)}` },
+            rating: { tag: 'div', class: 'product-rating', dataKey: 'rating', format: (val) => `<span class="star">★</span> ${val.rate} (${val.count})` }
+        };
+
+        function createProductCard(product) {
+            function createElement(config, data) {
+                const el = document.createElement(config.tag);
+                
+                if (config.class) {
+                    el.className = config.class;
+                }
+                
+                if (config.attrs) {
+                    Object.entries(config.attrs).forEach(([key, value]) => {
+                        el.setAttribute(key, value);
+                    });
+                }
+                
+                if (config.dataKey) {
+                    const value = getNestedValue(data, config.dataKey);
+                    
+                    if (config.tag === 'img') {
+                        el.src = value || '';
+                        el.alt = config.altKey ? getNestedValue(data, config.altKey) : '';
+                    } else if (config.format) {
+                        el.innerHTML = value !== undefined && value !== null ? config.format(value) : '';
+                    } else {
+                        el.textContent = value !== undefined && value !== null ? value : '';
+                    }
+                }
+                
+                if (config.children) {
+                    config.children.forEach(childKey => {
+                        const childConfig = cardStructure[childKey];
+                        const childEl = createElement(childConfig, data);
+                        el.appendChild(childEl);
+                    });
+                }
+                
+                return el;
+            }
+            
+            function getNestedValue(obj, key) {
+                return key.split('.').reduce((o, k) => o?.[k], obj);
+            }
+            
+            return createElement(cardStructure.container, product);
+        }
+
+        // Initialize
+        fetchProducts();
+    </script>
+</body>
+</html>
