@@ -598,59 +598,286 @@
 
         const cardStructure = {
             container: { tag: 'div', class: 'product-card', children: ['image', 'content'] },
-            image: { tag: 'img', class: 'product-image', dataKey: 'image', attrs: { loading: 'lazy' } },
+            image: { tag: 'img', class: 'product-image', dataKey: 'image',altKey: 'title', attrs: { loading: 'lazy' } },
             content: { tag: 'div', class: 'product-content', children: ['category', 'title', 'description', 'footer'] },
-            category: { tag: 'div', class: 'product-category', dataKey: 'category' },
-            title: { tag: 'h2', class: 'product-title', dataKey: 'title' },
-            description: { tag: 'p', class: 'product-description', dataKey: 'description' },
+            category: { tag: 'div', class: 'product-category', dataKey: 'category' },fallback: 'Uncategorized',
+            title: { tag: 'h2', class: 'product-title', dataKey: 'title' },fallback: 'Untitled product',
+            description: { tag: 'p', class: 'product-description', dataKey: 'description' },fallback: 'No description available',
             footer: { tag: 'div', class: 'product-footer', children: ['price', 'rating'] },
-            price: { tag: 'div', class: 'product-price', dataKey: 'price', format: (val) => `${val.toFixed(2)}` },
-            rating: { tag: 'div', class: 'product-rating', dataKey: 'rating', format: (val) => `<span class="star">★</span> ${val.rate} (${val.count})` }
+            price: { tag: 'div', class: 'product-price', dataKey: 'priceLabel'/*'price'*/, fallback: 'Price unavailable', /*format: (val) => `${val.toFixed(2)}`*/ },
+            rating: { tag: 'div', class: 'product-rating star', dataKey: 'ratingLabel'/*'rating'*/, fallback: 'No ratings', /*format: (val) => `<span class="star">★</span> ${val.rate} (${val.count})`*/ }
         };
 
-        function createProductCard(product) {
-            function createElement(config, data) {
-                const el = document.createElement(config.tag);
-                
-                if (config.class) {
-                    el.className = config.class;
+        // Resolve the first usable value from a list of possible API keys.
+        function getAlias(data, keys, fallback = undefined) {
+            for (const key of keys) {
+                const value = key.split('.').reduce(
+                    (obj, part) => obj?.[part],
+                    data
+                );
+
+                if (value !== undefined &&
+                    value !== null &&
+                    !(typeof value === 'string' && value.trim() === '')) {
+                    return value;
                 }
-                
-                if (config.attrs) {
-                    Object.entries(config.attrs).forEach(([key, value]) => {
-                        el.setAttribute(key, value);
-                    });
-                }
-                
-                if (config.dataKey) {
-                    const value = getNestedValue(data, config.dataKey);
-                    
-                    if (config.tag === 'img') {
-                        el.src = value || '';
-                        el.alt = config.altKey ? getNestedValue(data, config.altKey) : '';
-                    } else if (config.format) {
-                        el.innerHTML = value !== undefined && value !== null ? config.format(value) : '';
-                    } else {
-                        el.textContent = value !== undefined && value !== null ? value : '';
+            }
+
+            return fallback;
+        }
+
+
+        function createElement(config, data) {
+            const el = document.createElement(config.tag);
+
+            if (config.class) {
+                el.className = config.class;
+            }
+
+            if (config.attrs) {
+                Object.entries(config.attrs).forEach(([key, value]) => {
+                    if (value !== undefined && value !== null) {
+                        el.setAttribute(key, String(value));
                     }
-                }
-                
-                if (config.children) {
-                    config.children.forEach(childKey => {
-                        const childConfig = cardStructure[childKey];
-                        const childEl = createElement(childConfig, data);
-                        el.appendChild(childEl);
-                    });
-                }
-                
-                return el;
+                });
             }
-            
-            function getNestedValue(obj, key) {
-                return key.split('.').reduce((o, k) => o?.[k], obj);
+
+            // Only resolve a value when dataKey is defined.
+            if (typeof config.dataKey === 'string') {
+                const value = getNestedValue(data, config.dataKey);
+
+                if (config.tag === 'img') {
+                    el.alt = config.altKey
+                        ? String(getNestedValue(data, config.altKey) ?? '')
+                        : '';
+
+                    if (typeof value === 'string' && value.trim()) {
+                        el.src = value;
+                        el.hidden = false;
+
+                        el.addEventListener('error', () => {
+                            el.hidden = true;
+                        }, { once: true });
+                    } else {
+                        el.hidden = true;
+                    }
+                } else {
+                    el.textContent =
+                        value !== undefined &&
+                        value !== null &&
+                        value !== ''
+                            ? String(value)
+                            : config.fallback ?? '';
+                }
             }
+
+            // Recursively build children.
+            if (Array.isArray(config.children)) {
+                config.children.forEach(childKey => {
+                    const childConfig = cardStructure[childKey];
+
+                    if (!childConfig) {
+                        console.warn(
+                            `Missing cardStructure configuration for: ${childKey}`
+                        );
+                        return;
+                    }
+
+                    const childEl = createElement(childConfig, data);
+                    el.appendChild(childEl);
+                });
+            }
+
+            return el;
+        } 
+
+        function createProductCard(product) {
+            // function createElement(config, data) {
+            //     const el = document.createElement(config.tag);
+                
+            //     if (config.class) {
+            //         el.className = config.class;
+            //     }
+                
+            //     if (config.attrs) {
+            //         Object.entries(config.attrs).forEach(([key, value]) => {
+            //             el.setAttribute(key, value);
+            //         });
+            //     }
+                
+            //     if (config.dataKey) {
+            //         const value = getNestedValue(data, config.dataKey);
+                    
+            //         if (config.tag === 'img') {
+            //             el.src = value || '';
+            //             el.alt = config.altKey ? getNestedValue(data, config.altKey) : '';
+            //         } else if (config.format) {
+            //             el.innerHTML = value !== undefined && value !== null ? config.format(value) : '';
+            //         } else {
+            //             el.textContent = value !== undefined && value !== null ? value : '';
+            //         }
+            //     }
+                
+            //     if (config.children) {
+            //         config.children.forEach(childKey => {
+            //             const childConfig = cardStructure[childKey];
+            //             const childEl = createElement(childConfig, data);
+            //             el.appendChild(childEl);
+            //         });
+            //     }
+                
+            //     return el;
+            // }
             
-            return createElement(cardStructure.container, product);
+            // function getNestedValue(obj, key) {
+            //     return key.split('.').reduce((o, k) => o?.[k], obj);
+            // }
+            
+            const displayProduct = normalizeProduct(product);
+
+            // return createElement(cardStructure.container, product);
+            return createElement(cardStructure.container, displayProduct);
+        }
+
+        // Create a NEW display object.
+        // The original API response is never modified.
+        function normalizeProduct(input) {
+            const payload = input?.payload ?? input ?? {};
+
+            const title = getAlias(payload, [
+                'title',
+                'genericName',
+                'name',
+                'productName'
+            ], 'Untitled product');
+
+            const image = getAlias(payload, [
+                'imageUrl',
+                'image',
+                'imageURL',
+                'thumbnail',
+                'images.0'
+            ], '');
+
+            const category = getAlias(payload, [
+                'category',
+                'productCategory'
+            ], 'Uncategorized');
+
+            const description = getAlias(payload, [
+                'description',
+                'productDescription',
+                'details'
+            ], 'No description available');
+
+            const rawPrice = getAlias(payload, [
+                'price',
+                'salePrice',
+                'amount'
+            ]);
+
+            const currency = getAlias(payload, [
+                'currency'
+            ], 'INR');
+
+            // Treat zero, empty and invalid prices as unavailable.
+            const numericPrice =
+                rawPrice !== undefined &&
+                rawPrice !== '' &&
+                Number.isFinite(Number(rawPrice)) &&
+                Number(rawPrice) > 0
+                    ? Number(rawPrice)
+                    : null;
+
+            const priceLabel = numericPrice !== null
+                ? new Intl.NumberFormat('en-IN', {
+                    style: 'currency',
+                    currency,
+                    maximumFractionDigits: 2
+                }).format(numericPrice)
+                : 'Price unavailable';
+
+            // Support both numeric ratings and older { rate, count } objects.
+            const rawRating = getAlias(payload, [
+                'rating',
+                'reviews.rating',
+                'review.rate'
+            ]);
+
+            const rawCount = getAlias(payload, [
+                'reviewsCount',
+                'rating.count',
+                'reviewCount',
+                'review_count',
+                'reviews.count'
+            ]);
+
+            const ratingValue =
+                typeof rawRating === 'object' && rawRating !== null
+                    ? Number(rawRating.rate)
+                    : Number(rawRating);
+
+            const ratingCount =
+                typeof rawRating === 'object' && rawRating !== null
+                    ? Number(rawRating.count ?? rawCount)
+                    : Number(rawCount);
+
+            const hasRating =
+                rawRating !== undefined &&
+                rawRating !== null &&
+                Number.isFinite(ratingValue) &&
+                ratingValue > 0;
+
+            const ratingLabel = hasRating
+                ? `★ ${ratingValue.toFixed(1)}${
+                    Number.isFinite(ratingCount) && ratingCount > 0
+                        ? ` (${ratingCount} reviews)`
+                        : ''
+                }`
+                : 'No ratings';
+
+            return {
+                // Preserve useful original identifiers without modifying them.
+                id: input?._id ?? payload._id ?? null,
+                asin: getAlias(payload, ['Asin', 'asin'], ''),
+                title,
+                image,
+                category,
+                description,
+                price: numericPrice,
+                currency,
+                priceLabel,
+                rating: hasRating ? ratingValue : null,
+                reviewsCount:
+                    Number.isFinite(ratingCount) && ratingCount > 0
+                        ? ratingCount
+                        : 0,
+                ratingLabel,
+                url: getAlias(payload, [
+                    'affiliateUrl',
+                    'url',
+                    'productUrl'
+                ], ''),
+                tags: getAlias(payload, ['tags'], [])
+            };
+        }
+
+
+        function getNestedValue(obj, key) {
+            // Handle missing or invalid keys safely.
+            if (typeof key !== 'string' || !key.trim()) {
+                return undefined;
+            }
+
+            if (obj === null || obj === undefined) {
+                return undefined;
+            }
+
+            return key.split('.').reduce((value, part) => {
+                return value !== null && value !== undefined
+                    ? value[part]
+                    : undefined;
+            }, obj);
         }
 
         // Initialize
