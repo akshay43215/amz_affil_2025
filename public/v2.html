@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -17,6 +16,7 @@
             --shadow-hover: 0 8px 16px rgba(0, 0, 0, 0.15);
             --accent: #3b82f6;
             --accent-hover: #2563eb;
+            --on-accent: #ffffff;
             --radius: 12px;
             --spacing-sm: 0.5rem;
             --spacing-md: 1rem;
@@ -36,13 +36,13 @@
             --shadow-hover: 0 8px 16px rgba(0, 0, 0, 0.4);
             --accent: #60a5fa;
             --accent-hover: #3b82f6;
+            --on-accent: #0f172a;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        /* Lets the `hidden` attribute win over any display rule below */
+        [hidden] { display: none !important; }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
@@ -78,10 +78,7 @@
             flex-wrap: wrap;
         }
 
-        .header h1 {
-            font-size: clamp(1.5rem, 4vw, 2rem);
-            font-weight: 700;
-        }
+        .header h1 { font-size: clamp(1.5rem, 4vw, 2rem); font-weight: 700; }
 
         .theme-toggle {
             background-color: var(--bg-card);
@@ -98,10 +95,7 @@
             font-weight: 500;
         }
 
-        .theme-toggle:hover {
-            transform: scale(1.05);
-            border-color: var(--accent);
-        }
+        .theme-toggle:hover { transform: scale(1.05); border-color: var(--accent); }
 
         .filter-select,
         .limit-select {
@@ -117,9 +111,7 @@
         }
 
         .filter-select:hover,
-        .limit-select:hover {
-            border-color: var(--accent);
-        }
+        .limit-select:hover { border-color: var(--accent); }
 
         .filter-select:focus,
         .limit-select:focus {
@@ -128,11 +120,7 @@
             box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
         }
 
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: var(--spacing-xl);
-        }
+        .container { max-width: 1400px; margin: 0 auto; padding: var(--spacing-xl); }
 
         .filters-info {
             display: flex;
@@ -146,10 +134,7 @@
             gap: var(--spacing-md);
         }
 
-        .results-count {
-            color: var(--text-secondary);
-            font-size: 0.95rem;
-        }
+        .results-count { color: var(--text-secondary); font-size: 0.95rem; }
 
         .pagination-footer {
             display: flex;
@@ -162,12 +147,7 @@
             gap: var(--spacing-sm);
         }
 
-        .pagination {
-            display: flex;
-            gap: var(--spacing-sm);
-            align-items: center;
-            flex-wrap: wrap;
-        }
+        .pagination { display: flex; gap: var(--spacing-sm); align-items: center; flex-wrap: wrap; }
 
         .pagination button {
             background-color: transparent;
@@ -183,41 +163,15 @@
             font-size: 0.95rem;
         }
 
-        .pagination button:hover:not(:disabled):not(.active) {
-            background-color: var(--bg-secondary);
-        }
+        .pagination button:hover:not(:disabled):not(.active) { background-color: var(--bg-secondary); }
+        .pagination button:disabled { opacity: 0.4; cursor: not-allowed; color: var(--text-secondary); }
+        .pagination button.active { background-color: var(--accent); color: var(--on-accent); }
+        .pagination button.nav-btn { color: var(--text-primary); }
+        .pagination button.nav-btn:hover:not(:disabled) { color: var(--accent); }
 
-        .pagination button:disabled {
-            opacity: 0.4;
-            cursor: not-allowed;
-            color: var(--text-secondary);
-        }
+        .page-info { color: var(--text-secondary); font-size: 0.9rem; padding: 0 var(--spacing-sm); }
 
-        .pagination button.active {
-            background-color: var(--accent);
-            color: white;
-        }
-
-        .pagination button.nav-btn {
-            color: var(--text-primary);
-        }
-
-        .pagination button.nav-btn:hover:not(:disabled) {
-            color: var(--accent);
-        }
-
-        .page-info {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            padding: 0 var(--spacing-sm);
-        }
-
-        .loading {
-            text-align: center;
-            padding: var(--spacing-xl);
-            font-size: 1.2rem;
-            color: var(--text-secondary);
-        }
+        .loading { text-align: center; padding: var(--spacing-xl); font-size: 1.2rem; color: var(--text-secondary); }
 
         .products-grid {
             display: grid;
@@ -292,48 +246,63 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            gap: var(--spacing-md);
             margin-top: var(--spacing-md);
             padding-top: var(--spacing-md);
             border-top: 1px solid var(--border-color);
         }
 
-        .product-price {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--accent);
+        /* Primary action button (affiliate link) */
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.6rem 1.25rem;
+            background-color: var(--accent);
+            color: var(--on-accent);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            text-decoration: none;
+            white-space: nowrap;
+            transition: var(--transition);
         }
 
-        .product-rating {
-            display: flex;
-            align-items: center;
-            gap: 0.25rem;
+        .btn-primary:hover { background-color: var(--accent-hover); }
+
+        .btn-primary.is-disabled {
+            background-color: var(--bg-secondary);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+            cursor: not-allowed;
+        }
+
+        /* Secondary text link (view more) */
+        .link-subtle {
             color: var(--text-secondary);
             font-size: 0.9rem;
+            text-decoration: underline;
+            text-decoration-color: transparent;
+            text-underline-offset: 4px;
+            transition: var(--transition);
         }
 
-        .star {
-            color: #fbbf24;
+        .link-subtle:hover { color: var(--accent); text-decoration-color: currentColor; }
+
+        .btn-primary:focus-visible,
+        .link-subtle:focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: 3px;
         }
 
         @media (max-width: 768px) {
-            .container {
-                padding: var(--spacing-md);
-            }
-
-            .products-grid {
-                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-                gap: var(--spacing-md);
-            }
-
-            .header {
-                padding: var(--spacing-md);
-            }
+            .container { padding: var(--spacing-md); }
+            .products-grid { grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: var(--spacing-md); }
+            .header { padding: var(--spacing-md); }
         }
 
         @media (max-width: 480px) {
-            .products-grid {
-                grid-template-columns: 1fr;
-            }
+            .products-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -388,6 +357,13 @@
         let currentPage = 1;
         let itemsPerPage = 10;
 
+        // All user-facing card text lives here (easy to change or translate).
+        const UI_TEXT = {
+            buyLabel: 'Buy now',
+            buyUnavailable: 'Unavailable',
+            viewMoreLabel: 'View more'
+        };
+
         // Theme toggle
         const savedTheme = 'light';
         document.documentElement.setAttribute('data-theme', savedTheme);
@@ -415,16 +391,17 @@
             try {
                 const response = await fetch('https://openapi-wof3.onrender.com/api/v1/data');
                 const result = await response.json();
-                
-                // Handle both API formats
-                if (result.success && result.data && result.data.items) {
-                    allProducts = result.data.items;
+
+                // Handle all known API formats (items / item / bare array)
+                const list = result?.data?.items ?? result?.data?.item;
+                if (result.success && Array.isArray(list)) {
+                    allProducts = list;
                 } else if (Array.isArray(result)) {
                     allProducts = result;
                 } else {
                     throw new Error('Unexpected API response format');
                 }
-                
+
                 populateCategoryFilter();
                 filterProducts();
             } catch (error) {
@@ -433,14 +410,17 @@
             }
         }
 
+        function getCategory(product) {
+            const category = product.payload?.category || product.category;
+            return typeof category === 'string' ? category.trim() : category;
+        }
+
         function populateCategoryFilter() {
             const categories = new Set();
-            
             allProducts.forEach(product => {
-                const category = product.payload?.category || product.category;
+                const category = getCategory(product);
                 if (category) categories.add(category);
             });
-            
             categories.forEach(category => {
                 const option = document.createElement('option');
                 option.value = category;
@@ -451,16 +431,9 @@
 
         function filterProducts() {
             const selectedCategory = categoryFilter.value;
-            
-            if (selectedCategory === 'all') {
-                filteredProducts = [...allProducts];
-            } else {
-                filteredProducts = allProducts.filter(product => {
-                    const category = product.payload?.category || product.category;
-                    return category === selectedCategory;
-                });
-            }
-            
+            filteredProducts = selectedCategory === 'all'
+                ? [...allProducts]
+                : allProducts.filter(product => getCategory(product) === selectedCategory);
             currentPage = 1;
             displayProducts();
         }
@@ -470,16 +443,14 @@
             filtersInfo.style.display = 'flex';
             paginationFooter.style.display = 'flex';
             productsGrid.innerHTML = '';
-            
+
             const startIndex = (currentPage - 1) * itemsPerPage;
-            const endIndex = startIndex + itemsPerPage;
-            const productsToShow = filteredProducts.slice(startIndex, endIndex);
-            
+            const productsToShow = filteredProducts.slice(startIndex, startIndex + itemsPerPage);
+
             productsToShow.forEach(product => {
-                const card = createProductCard(product.payload);
-                productsGrid.appendChild(card);
+                productsGrid.appendChild(createProductCard(product));
             });
-            
+
             updateResultsCount();
             updatePagination();
         }
@@ -490,184 +461,189 @@
             resultsCount.textContent = `Showing ${startIndex}-${endIndex} of ${filteredProducts.length} products`;
         }
 
+        function goToPage(page) {
+            currentPage = page;
+            displayProducts();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
         function updatePagination() {
             const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
             paginationEl.innerHTML = '';
-            
+
             if (totalPages <= 1) {
                 paginationFooter.style.display = 'none';
                 return;
             }
-            
+
             paginationFooter.style.display = 'flex';
-            
-            // Previous button
-            const prevBtn = document.createElement('button');
-            prevBtn.className = 'nav-btn';
-            prevBtn.textContent = '← prev';
-            prevBtn.disabled = currentPage === 1;
-            prevBtn.addEventListener('click', () => {
-                if (currentPage > 1) {
-                    currentPage--;
-                    displayProducts();
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                }
-            });
-            paginationEl.appendChild(prevBtn);
-            
-            // Page numbers
+
+            const makeButton = (label, onClick, { className = '', disabled = false } = {}) => {
+                const btn = document.createElement('button');
+                btn.textContent = label;
+                if (className) btn.className = className;
+                btn.disabled = disabled;
+                btn.addEventListener('click', onClick);
+                return btn;
+            };
+            const makeDots = () => {
+                const dots = document.createElement('span');
+                dots.className = 'page-info';
+                dots.textContent = '...';
+                return dots;
+            };
+
+            paginationEl.appendChild(makeButton('← prev', () => goToPage(currentPage - 1), {
+                className: 'nav-btn', disabled: currentPage === 1
+            }));
+
             const maxVisiblePages = 5;
             let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
             let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
-            
             if (endPage - startPage < maxVisiblePages - 1) {
                 startPage = Math.max(1, endPage - maxVisiblePages + 1);
             }
-            
+
             if (startPage > 1) {
-                const firstBtn = document.createElement('button');
-                firstBtn.textContent = '1';
-                firstBtn.addEventListener('click', () => {
-                    currentPage = 1;
-                    displayProducts();
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                });
-                paginationEl.appendChild(firstBtn);
-                
-                if (startPage > 2) {
-                    const dots = document.createElement('span');
-                    dots.className = 'page-info';
-                    dots.textContent = '...';
-                    paginationEl.appendChild(dots);
-                }
+                paginationEl.appendChild(makeButton('1', () => goToPage(1)));
+                if (startPage > 2) paginationEl.appendChild(makeDots());
             }
-            
+
             for (let i = startPage; i <= endPage; i++) {
-                const pageBtn = document.createElement('button');
-                pageBtn.textContent = i;
-                if (i === currentPage) pageBtn.classList.add('active');
-                pageBtn.addEventListener('click', () => {
-                    currentPage = i;
-                    displayProducts();
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                });
-                paginationEl.appendChild(pageBtn);
+                paginationEl.appendChild(makeButton(String(i), () => goToPage(i), {
+                    className: i === currentPage ? 'active' : ''
+                }));
             }
-            
+
             if (endPage < totalPages) {
-                if (endPage < totalPages - 1) {
-                    const dots = document.createElement('span');
-                    dots.className = 'page-info';
-                    dots.textContent = '...';
-                    paginationEl.appendChild(dots);
-                }
-                
-                const lastBtn = document.createElement('button');
-                lastBtn.textContent = totalPages;
-                lastBtn.addEventListener('click', () => {
-                    currentPage = totalPages;
-                    displayProducts();
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                });
-                paginationEl.appendChild(lastBtn);
+                if (endPage < totalPages - 1) paginationEl.appendChild(makeDots());
+                paginationEl.appendChild(makeButton(String(totalPages), () => goToPage(totalPages)));
             }
-            
-            // Next button
-            const nextBtn = document.createElement('button');
-            nextBtn.className = 'nav-btn';
-            nextBtn.textContent = 'next →';
-            nextBtn.disabled = currentPage === totalPages;
-            nextBtn.addEventListener('click', () => {
-                if (currentPage < totalPages) {
-                    currentPage++;
-                    displayProducts();
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                }
-            });
-            paginationEl.appendChild(nextBtn);
+
+            paginationEl.appendChild(makeButton('next →', () => goToPage(currentPage + 1), {
+                className: 'nav-btn', disabled: currentPage === totalPages
+            }));
         }
 
         // Event listeners
         categoryFilter.addEventListener('change', filterProducts);
-        
+
         limitSelect.addEventListener('change', () => {
-            itemsPerPage = parseInt(limitSelect.value);
+            itemsPerPage = parseInt(limitSelect.value, 10);
             currentPage = 1;
             displayProducts();
         });
 
+        /*
+         * Card layout definition.
+         *   dataKey   -> text (or img src) read from the normalized product
+         *   hrefKey   -> link target read from the normalized product (validated)
+         *   labelKey  -> text looked up in UI_TEXT
+         *   whenMissing (links only) -> 'hide' (default) or 'disable' when there is no valid URL
+         *   fallback  -> text shown when a dataKey value is empty
+         */
         const cardStructure = {
             container: { tag: 'div', class: 'product-card', children: ['image', 'content'] },
-            image: { tag: 'img', class: 'product-image', dataKey: 'image',altKey: 'title', attrs: { loading: 'lazy' } },
+            image: { tag: 'img', class: 'product-image', dataKey: 'image', altKey: 'title', attrs: { loading: 'lazy' } },
             content: { tag: 'div', class: 'product-content', children: ['category', 'title', 'description', 'footer'] },
-            category: { tag: 'div', class: 'product-category', dataKey: 'category' },fallback: 'Uncategorized',
-            title: { tag: 'h2', class: 'product-title', dataKey: 'title' },fallback: 'Untitled product',
-            description: { tag: 'p', class: 'product-description', dataKey: 'description' },fallback: 'No description available',
-            footer: { tag: 'div', class: 'product-footer', children: ['price', 'rating'] },
-            price: { tag: 'div', class: 'product-price', dataKey: 'priceLabel'/*'price'*/, fallback: 'Price unavailable', /*format: (val) => `${val.toFixed(2)}`*/ },
-            rating: { tag: 'div', class: 'product-rating star', dataKey: 'ratingLabel'/*'rating'*/, fallback: 'No ratings', /*format: (val) => `<span class="star">★</span> ${val.rate} (${val.count})`*/ }
+            category: { tag: 'div', class: 'product-category', dataKey: 'category', fallback: 'Uncategorized' },
+            title: { tag: 'h2', class: 'product-title', dataKey: 'title', fallback: 'Untitled product' },
+            description: { tag: 'p', class: 'product-description', dataKey: 'description', fallback: 'No description available' },
+            footer: { tag: 'div', class: 'product-footer', children: ['buyButton', 'viewMore'] },
+            buyButton: {
+                tag: 'a', class: 'btn-primary',
+                hrefKey: 'url', labelKey: 'buyLabel',
+                disabledLabelKey: 'buyUnavailable', whenMissing: 'disable'
+            },
+            viewMore: {
+                tag: 'a', class: 'link-subtle',
+                hrefKey: 'moreUrl', labelKey: 'viewMoreLabel',
+                whenMissing: 'hide', external: false
+            }
         };
 
         // Resolve the first usable value from a list of possible API keys.
         function getAlias(data, keys, fallback = undefined) {
             for (const key of keys) {
-                const value = key.split('.').reduce(
-                    (obj, part) => obj?.[part],
-                    data
-                );
-
-                if (value !== undefined &&
-                    value !== null &&
+                const value = key.split('.').reduce((obj, part) => obj?.[part], data);
+                if (value !== undefined && value !== null &&
                     !(typeof value === 'string' && value.trim() === '')) {
                     return value;
                 }
             }
-
             return fallback;
         }
 
+        function getNestedValue(obj, key) {
+            if (typeof key !== 'string' || !key.trim()) return undefined;
+            if (obj === null || obj === undefined) return undefined;
+            return key.split('.').reduce(
+                (value, part) => (value !== null && value !== undefined ? value[part] : undefined),
+                obj
+            );
+        }
+
+        // Only allow http(s) URLs so a bad payload can never inject javascript: links.
+        function safeUrl(value) {
+            if (typeof value !== 'string' || !value.trim()) return null;
+            try {
+                const url = new URL(value.trim(), window.location.href);
+                return ['http:', 'https:'].includes(url.protocol) ? url.href : null;
+            } catch {
+                return null;
+            }
+        }
 
         function createElement(config, data) {
             const el = document.createElement(config.tag);
 
-            if (config.class) {
-                el.className = config.class;
-            }
+            if (config.class) el.className = config.class;
 
             if (config.attrs) {
                 Object.entries(config.attrs).forEach(([key, value]) => {
-                    if (value !== undefined && value !== null) {
-                        el.setAttribute(key, String(value));
-                    }
+                    if (value !== undefined && value !== null) el.setAttribute(key, String(value));
                 });
             }
 
-            // Only resolve a value when dataKey is defined.
+            // Text / image values
             if (typeof config.dataKey === 'string') {
                 const value = getNestedValue(data, config.dataKey);
 
                 if (config.tag === 'img') {
-                    el.alt = config.altKey
-                        ? String(getNestedValue(data, config.altKey) ?? '')
-                        : '';
-
+                    el.alt = config.altKey ? String(getNestedValue(data, config.altKey) ?? '') : '';
                     if (typeof value === 'string' && value.trim()) {
                         el.src = value;
                         el.hidden = false;
-
-                        el.addEventListener('error', () => {
-                            el.hidden = true;
-                        }, { once: true });
+                        el.addEventListener('error', () => { el.hidden = true; }, { once: true });
                     } else {
                         el.hidden = true;
                     }
                 } else {
                     el.textContent =
-                        value !== undefined &&
-                        value !== null &&
-                        value !== ''
+                        value !== undefined && value !== null && value !== ''
                             ? String(value)
                             : config.fallback ?? '';
+                }
+            }
+
+            // Link / button values
+            if (typeof config.hrefKey === 'string') {
+                const href = safeUrl(getNestedValue(data, config.hrefKey));
+                el.textContent = UI_TEXT[config.labelKey] ?? '';
+
+                if (href) {
+                    el.href = href;
+                    if (config.external !== false) {
+                        el.target = '_blank';
+                        el.rel = 'sponsored nofollow noopener noreferrer';
+                    }
+                } else if (config.whenMissing === 'disable') {
+                    el.textContent = UI_TEXT[config.disabledLabelKey] ?? el.textContent;
+                    el.classList.add('is-disabled');
+                    el.setAttribute('aria-disabled', 'true');
+                    el.setAttribute('role', 'link');
+                } else {
+                    el.hidden = true;
                 }
             }
 
@@ -675,169 +651,59 @@
             if (Array.isArray(config.children)) {
                 config.children.forEach(childKey => {
                     const childConfig = cardStructure[childKey];
-
                     if (!childConfig) {
-                        console.warn(
-                            `Missing cardStructure configuration for: ${childKey}`
-                        );
+                        console.warn(`Missing cardStructure configuration for: ${childKey}`);
                         return;
                     }
-
-                    const childEl = createElement(childConfig, data);
-                    el.appendChild(childEl);
+                    el.appendChild(createElement(childConfig, data));
                 });
             }
 
             return el;
-        } 
-
-        function createProductCard(product) {
-            // function createElement(config, data) {
-            //     const el = document.createElement(config.tag);
-                
-            //     if (config.class) {
-            //         el.className = config.class;
-            //     }
-                
-            //     if (config.attrs) {
-            //         Object.entries(config.attrs).forEach(([key, value]) => {
-            //             el.setAttribute(key, value);
-            //         });
-            //     }
-                
-            //     if (config.dataKey) {
-            //         const value = getNestedValue(data, config.dataKey);
-                    
-            //         if (config.tag === 'img') {
-            //             el.src = value || '';
-            //             el.alt = config.altKey ? getNestedValue(data, config.altKey) : '';
-            //         } else if (config.format) {
-            //             el.innerHTML = value !== undefined && value !== null ? config.format(value) : '';
-            //         } else {
-            //             el.textContent = value !== undefined && value !== null ? value : '';
-            //         }
-            //     }
-                
-            //     if (config.children) {
-            //         config.children.forEach(childKey => {
-            //             const childConfig = cardStructure[childKey];
-            //             const childEl = createElement(childConfig, data);
-            //             el.appendChild(childEl);
-            //         });
-            //     }
-                
-            //     return el;
-            // }
-            
-            // function getNestedValue(obj, key) {
-            //     return key.split('.').reduce((o, k) => o?.[k], obj);
-            // }
-            
-            const displayProduct = normalizeProduct(product);
-
-            // return createElement(cardStructure.container, product);
-            return createElement(cardStructure.container, displayProduct);
         }
 
-        // Create a NEW display object.
-        // The original API response is never modified.
+        function createProductCard(product) {
+            return createElement(cardStructure.container, normalizeProduct(product));
+        }
+
+        // Builds a NEW display object; the original API response is never modified.
         function normalizeProduct(input) {
             const payload = input?.payload ?? input ?? {};
+            const text = value => (typeof value === 'string' ? value.trim() : value);
 
-            const title = getAlias(payload, [
-                'title',
-                'genericName',
-                'name',
-                'productName'
-            ], 'Untitled product');
+            const title = text(getAlias(payload, ['title', 'genericName', 'name', 'productName'], 'Untitled product'));
+            const image = getAlias(payload, ['imageUrl', 'image', 'imageURL', 'thumbnail', 'images.0'], '');
+            const category = text(getAlias(payload, ['category', 'productCategory'], 'Uncategorized'));
+            const description = text(getAlias(payload, ['description', 'productDescription', 'details'], 'No description available'));
 
-            const image = getAlias(payload, [
-                'imageUrl',
-                'image',
-                'imageURL',
-                'thumbnail',
-                'images.0'
-            ], '');
-
-            const category = getAlias(payload, [
-                'category',
-                'productCategory'
-            ], 'Uncategorized');
-
-            const description = getAlias(payload, [
-                'description',
-                'productDescription',
-                'details'
-            ], 'No description available');
-
-            const rawPrice = getAlias(payload, [
-                'price',
-                'salePrice',
-                'amount'
-            ]);
-
-            const currency = getAlias(payload, [
-                'currency'
-            ], 'INR');
+            const rawPrice = getAlias(payload, ['price', 'salePrice', 'amount']);
+            const currency = getAlias(payload, ['currency'], 'INR');
 
             // Treat zero, empty and invalid prices as unavailable.
             const numericPrice =
-                rawPrice !== undefined &&
-                rawPrice !== '' &&
-                Number.isFinite(Number(rawPrice)) &&
-                Number(rawPrice) > 0
+                rawPrice !== undefined && rawPrice !== '' &&
+                Number.isFinite(Number(rawPrice)) && Number(rawPrice) > 0
                     ? Number(rawPrice)
                     : null;
 
             const priceLabel = numericPrice !== null
-                ? new Intl.NumberFormat('en-IN', {
-                    style: 'currency',
-                    currency,
-                    maximumFractionDigits: 2
-                }).format(numericPrice)
+                ? new Intl.NumberFormat('en-IN', { style: 'currency', currency, maximumFractionDigits: 2 }).format(numericPrice)
                 : 'Price unavailable';
 
             // Support both numeric ratings and older { rate, count } objects.
-            const rawRating = getAlias(payload, [
-                'rating',
-                'reviews.rating',
-                'review.rate'
-            ]);
-
-            const rawCount = getAlias(payload, [
-                'reviewsCount',
-                'rating.count',
-                'reviewCount',
-                'review_count',
-                'reviews.count'
-            ]);
-
-            const ratingValue =
-                typeof rawRating === 'object' && rawRating !== null
-                    ? Number(rawRating.rate)
-                    : Number(rawRating);
-
-            const ratingCount =
-                typeof rawRating === 'object' && rawRating !== null
-                    ? Number(rawRating.count ?? rawCount)
-                    : Number(rawCount);
-
-            const hasRating =
-                rawRating !== undefined &&
-                rawRating !== null &&
-                Number.isFinite(ratingValue) &&
-                ratingValue > 0;
+            const rawRating = getAlias(payload, ['rating', 'reviews.rating', 'review.rate']);
+            const rawCount = getAlias(payload, ['reviewsCount', 'rating.count', 'reviewCount', 'review_count', 'reviews.count']);
+            const isRatingObject = typeof rawRating === 'object' && rawRating !== null;
+            const ratingValue = isRatingObject ? Number(rawRating.rate) : Number(rawRating);
+            const ratingCount = isRatingObject ? Number(rawRating.count ?? rawCount) : Number(rawCount);
+            const hasRating = rawRating !== undefined && rawRating !== null &&
+                Number.isFinite(ratingValue) && ratingValue > 0;
 
             const ratingLabel = hasRating
-                ? `★ ${ratingValue.toFixed(1)}${
-                    Number.isFinite(ratingCount) && ratingCount > 0
-                        ? ` (${ratingCount} reviews)`
-                        : ''
-                }`
+                ? `★ ${ratingValue.toFixed(1)}${Number.isFinite(ratingCount) && ratingCount > 0 ? ` (${ratingCount} reviews)` : ''}`
                 : 'No ratings';
 
             return {
-                // Preserve useful original identifiers without modifying them.
                 id: input?._id ?? payload._id ?? null,
                 asin: getAlias(payload, ['Asin', 'asin'], ''),
                 title,
@@ -848,36 +714,14 @@
                 currency,
                 priceLabel,
                 rating: hasRating ? ratingValue : null,
-                reviewsCount:
-                    Number.isFinite(ratingCount) && ratingCount > 0
-                        ? ratingCount
-                        : 0,
+                reviewsCount: Number.isFinite(ratingCount) && ratingCount > 0 ? ratingCount : 0,
                 ratingLabel,
-                url: getAlias(payload, [
-                    'affiliateUrl',
-                    'url',
-                    'productUrl'
-                ], ''),
+                // Buy button target (affiliate link)
+                url: getAlias(payload, ['affiliateUrl', 'url', 'productUrl'], ''),
+                // "View more" target - planned API field; several likely names are accepted.
+                moreUrl: getAlias(payload, ['viewMoreUrl', 'moreUrl', 'detailsUrl', 'detailUrl', 'details.url', 'affiliateUrl'], ''),
                 tags: getAlias(payload, ['tags'], [])
             };
-        }
-
-
-        function getNestedValue(obj, key) {
-            // Handle missing or invalid keys safely.
-            if (typeof key !== 'string' || !key.trim()) {
-                return undefined;
-            }
-
-            if (obj === null || obj === undefined) {
-                return undefined;
-            }
-
-            return key.split('.').reduce((value, part) => {
-                return value !== null && value !== undefined
-                    ? value[part]
-                    : undefined;
-            }, obj);
         }
 
         // Initialize
