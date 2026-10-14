@@ -719,7 +719,7 @@
                 // Buy button target (affiliate link)
                 url: getAlias(payload, ['affiliateUrl', 'url', 'productUrl'], ''),
                 // "View more" target - planned API field; several likely names are accepted.
-                moreUrl: getAlias(payload, ['moreUrl', 'detailsUrl', 'detailUrl', 'details.url', 'affiliateUrl'], ''),
+                moreUrl: getAlias(payload, ['viewMoreUrl', 'detailsUrl', 'detailUrl', 'details.url', 'affiliateUrl'], ''),
                 tags: getAlias(payload, ['tags'], [])
             };
         }
